@@ -3,6 +3,11 @@
 namespace App\Tests;
 
 use App\Container;
+use App\Tests\TestClasses\ClassWithArgumentsInConstructor;
+use App\Tests\TestClasses\ClassWithUntypedArgs;
+use App\Tests\TestClasses\FooController;
+use App\Tests\TestClasses\FooControllerEmptyConstructor;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -29,7 +34,7 @@ class ContainerTest extends TestCase
      */
     public function make_not_exists_class()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->container->make(FooController::class);
     }
 
@@ -41,5 +46,25 @@ class ContainerTest extends TestCase
         $this->container->register(FooControllerEmptyConstructor::class);
         $controller = $this->container->make(FooControllerEmptyConstructor::class);
         $this->assertInstanceOf(FooControllerEmptyConstructor::class, $controller);
+    }
+
+    /**
+     * @test
+     */
+    public function make_class_with_arguments()
+    {
+        $this->container->register(ClassWithArgumentsInConstructor::class);
+        $controller = $this->container->make(ClassWithArgumentsInConstructor::class);
+        $this->assertInstanceOf(ClassWithArgumentsInConstructor::class, $controller);
+    }
+
+    /**
+     * @test
+     */
+    public function make_class_with_untyped_args()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->container->register(ClassWithUntypedArgs::class);
+        $this->container->make(ClassWithUntypedArgs::class);
     }
 }

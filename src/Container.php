@@ -33,6 +33,17 @@ class Container
         if ($constructorReflection->getNumberOfParameters() === 0) {
             return new $className;
         }
-        throw  new \InvalidArgumentException("Can't create $className");
+        $params = $constructorReflection->getParameters();
+        $constructorArgs = [];
+        foreach ($params as $v) {
+            $paramClass = $v->getClass();
+            if ($paramClass !== null) {
+                $this->register($paramClass->name);
+                $constructorArgs [] = $this->make($paramClass->name);
+            } else {
+                throw new \InvalidArgumentException("Can't resolve parameter for $className");
+            }
+        }
+        return $reflectionClass->newInstanceArgs($constructorArgs);
     }
 }
