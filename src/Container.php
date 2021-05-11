@@ -6,9 +6,12 @@ class Container
 {
     private array $services = [];
 
-    public function register($itemName)
+    public function register($abstraction, $implementation = null)
     {
-        $this->services[$itemName] = $itemName;
+        if ($implementation === null) {
+            $implementation = $abstraction;
+        }
+        $this->services[$abstraction] = $implementation;
     }
 
     public function make($itemName)

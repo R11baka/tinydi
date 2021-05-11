@@ -7,6 +7,8 @@ use App\Tests\TestClasses\ClassWithArgumentsInConstructor;
 use App\Tests\TestClasses\ClassWithUntypedArgs;
 use App\Tests\TestClasses\FooController;
 use App\Tests\TestClasses\FooControllerEmptyConstructor;
+use App\Tests\TestClasses\Runner;
+use App\Tests\TestClasses\TestRunner;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -66,5 +68,16 @@ class ContainerTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->container->register(ClassWithUntypedArgs::class);
         $this->container->make(ClassWithUntypedArgs::class);
+    }
+
+    /**
+     * @test
+     */
+    public function register_interface()
+    {
+        $this->container->register(Runner::class, TestRunner::class);
+        $class = $this->container->make(Runner::class);
+        $this->assertInstanceOf(TestRunner::class, $class);
+        $this->assertInstanceOf(Runner::class, $class);
     }
 }
