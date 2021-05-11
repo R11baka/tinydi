@@ -7,14 +7,20 @@ use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
 {
+    private Container $container;
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+    }
+
     /**
      * @test
      */
     public function register_simple_class()
     {
-        $container = new Container();
-        $container->register(FooController::class);
-        $controller = $container->make(FooController::class);
+        $this->container->register(FooController::class);
+        $controller = $this->container->make(FooController::class);
         $this->assertInstanceOf(FooController::class, $controller);
     }
 
@@ -24,7 +30,16 @@ class ContainerTest extends TestCase
     public function make_not_exists_class()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $container = new Container();
-        $container->make(FooController::class);
+        $this->container->make(FooController::class);
+    }
+
+    /**
+     * @test
+     */
+    public function make_class_with_zero_arguments()
+    {
+        $this->container->register(FooControllerEmptyConstructor::class);
+        $controller = $this->container->make(FooControllerEmptyConstructor::class);
+        $this->assertInstanceOf(FooControllerEmptyConstructor::class, $controller);
     }
 }
