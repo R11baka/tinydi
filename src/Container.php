@@ -14,6 +14,13 @@ class Container
         $this->services[$abstraction] = $implementation;
     }
 
+    private function registerIfNotExists($abstraction, $implementation = null)
+    {
+        if (array_key_exists($abstraction, $this->services) === false) {
+            $this->register($abstraction, $implementation);
+        }
+    }
+
     public function make($itemName)
     {
         if (isset($this->services[$itemName])) {
@@ -41,7 +48,7 @@ class Container
         foreach ($params as $v) {
             $paramClass = $v->getClass();
             if ($paramClass !== null) {
-                $this->register($paramClass->name);
+                $this->registerIfNotExists($paramClass->name);
                 $constructorArgs [] = $this->make($paramClass->name);
             } else {
                 throw new \InvalidArgumentException("Can't resolve parameter for $className");

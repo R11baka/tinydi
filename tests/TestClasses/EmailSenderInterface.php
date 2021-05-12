@@ -4,7 +4,7 @@
 namespace App\Tests\TestClasses;
 
 
-interface Runner
+interface EmailSenderInterface
 {
-    public function run();
+
 }

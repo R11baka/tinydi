@@ -4,7 +4,7 @@
 namespace App\Tests\TestClasses;
 
 
-class TestRunner implements Runner
+class TestRunnerInterface implements RunnerInterface
 {
     public function run()
     {
